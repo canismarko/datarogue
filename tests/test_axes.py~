@@ -1,0 +1,8 @@
+import unittest
+
+from datarogue import axes_positions
+
+class AxesTests(unittest.TestCase):
+    def test_no_axes(self):
+        
+        axes_positions(

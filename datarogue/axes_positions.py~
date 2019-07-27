@@ -1,0 +1,18 @@
+from typing import List, Tuple
+
+def axes_positions(self, figure) -> List[Tuple[int]]:
+    """Extract the pixel positions for axes in a figures.
+    
+    Parameters
+    ==========
+    figure :
+      The axes image.
+    
+    Returns
+    =======
+    positions :
+      A list of tuples, each with the (row, col) pixel position of a
+      unique axis.
+    
+    """
+    print(figure)

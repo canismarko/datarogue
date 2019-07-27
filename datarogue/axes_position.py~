@@ -1,0 +1,6 @@
+def axes_positions(self, figure):
+    """Extract the pixel positions for axes in a figures.
+    
+    Parameters
+    ==========
+    fig"""
