@@ -1,25 +1,32 @@
 from typing import List, Tuple
 
 import numpy as np
-from keras import Sequential
+from keras import Sequential, losses, optimizers
 from keras.layers import MaxPooling2D, Conv2D, Flatten, Dense
 
-def num_axes_cnn():
-    # initially taken from tutorial
-    input_shape = (64, 64, 3)
-    num_classes = 10
-    # https://adventuresinmachinelearning.com/keras-tutorial-cnn-11-lines/
-    model = Sequential()
-    model.add(Conv2D(32, kernel_size=(5, 5), strides=(1, 1),
-                     activation='relu',
-                     input_shape=input_shape))
-    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
-    model.add(Conv2D(64, (5, 5), activation='relu'))
-    model.add(MaxPooling2D(pool_size=(2, 2)))
-    model.add(Flatten())
-    model.add(Dense(1000, activation='relu'))
-    model.add(Dense(num_classes, activation='softmax'))
-    return model
+from .image_tools import resize_image
+
+class NumAxesCNN(Sequential):
+    """A convolution neural network for determining the number of axes."""
+    image_shape = (256, 256, 3)
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # initially taken from tutorial
+        # https://adventuresinmachinelearning.com/keras-tutorial-cnn-11-lines/
+        self.add(Conv2D(32, kernel_size=(5, 5), strides=(1, 1),
+                         activation='relu',
+                         input_shape=self.image_shape))
+        self.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+        self.add(Conv2D(64, (5, 5), activation='relu'))
+        self.add(MaxPooling2D(pool_size=(2, 2)))
+        self.add(Flatten())
+        self.add(Dense(1000, activation='relu'))
+        self.add(Dense(1, activation='softmax'))
+        # Compile the neural network
+        self.compile(loss=losses.mean_squared_error,
+                      optimizer=optimizers.SGD(lr=0.01),
+                      metrics=['accuracy'])
 
 
 def num_axes(figure: np.ndarray) -> int:
@@ -36,8 +43,14 @@ def num_axes(figure: np.ndarray) -> int:
       How many axes were detected within the figure image.
     
     """
-    cnn = num_axes_cnn()
-    pass
+    cnn = NumAxesCNN()
+    # Resample the image to match the CNN
+    x = resize_image(figure, new_shape=cnn.image_shape)
+    x = np.array([x])
+    # Use the neural network to predict the number of axes
+    cnn_out = cnn.predict(x)
+    n_axes = int(cnn_out[0,0])
+    return n_axes
 
 
 def axes_positions(figure: np.ndarray) -> List[Tuple[int]]:

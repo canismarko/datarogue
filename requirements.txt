@@ -16,7 +16,6 @@ cloudpickle=1.2.1=py_0
 cycler=0.10.0=py_1
 cytoolz=0.10.0=py37h516909a_0
 dask-core=2.1.0=py_0
-datarogue=0.1=dev_0
 decorator=4.4.0=py_0
 freetype=2.10.0=he983fc9_0
 gast=0.2.2=py_0

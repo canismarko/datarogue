@@ -11,6 +11,7 @@ class AxesNumberTests(unittest.TestCase):
     def test_no_axes(self):
         comic = imageio.imread(comic_fname)
         n_axs = num_axes(comic)
+        print(n_axs)
         self.assertEqual(n_axs, 0)
 
 
